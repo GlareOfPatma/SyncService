@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"syscall"
 	"time"
 )
 
@@ -38,13 +37,10 @@ func main() {
 
 	for {
 		for _, path := range mapToRegistredPeople {
-			rsyncBin, _ := exec.LookPath("rsync")
-			args := []string{"-avz /home/adminusertest/test/*.txt", path}
-			env := os.Environ()
-			execErr := syscall.Exec(rsyncBin, args, env)
-			if execErr != nil {
-				panic(execErr)
-			}
+			temp := path
+			cmd := exec.Command("rsync", "-avz", "/home/adminusertest/test/*.txt", temp)
+			out := cmd.Run()
+			fmt.Println(out)
 		}
 		time.Sleep(time.Hour)
 	}
